@@ -136,7 +136,14 @@ const Layout = ({ children }) => {
   )
   const toggleSearchHandler = e => {
     e.preventDefault()
-    toggleSearch(state => !state)
+    if (sidebarDisplay) {
+      // 当侧边栏时显示时,正常执行隐藏显示切换逻辑
+      toggleSearch(state => !state)
+    } else {
+      // 当侧边栏时隐藏时,点击搜索按钮应显示侧边栏和搜索栏
+      toggleSidebar(true)
+      toggleSearch(true)
+    }
   }
 
   return (
