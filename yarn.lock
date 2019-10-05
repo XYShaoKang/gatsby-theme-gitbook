@@ -4725,6 +4725,13 @@ gatsby-page-utils@^0.0.23:
     micromatch "^3.1.10"
     slash "^3.0.0"
 
+gatsby-plugin-layout@^1.1.10:
+  version "1.1.10"
+  resolved "https://registry.npm.taobao.org/gatsby-plugin-layout/download/gatsby-plugin-layout-1.1.10.tgz#be1f22dbe831470634ed39d6bb22ab2a2226fa05"
+  integrity sha1-vh8i2+gxRwY07TnWuyKrKiIm+gU=
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+
 gatsby-plugin-page-creator@^2.1.23:
   version "2.1.23"
   resolved "https://registry.npm.taobao.org/gatsby-plugin-page-creator/download/gatsby-plugin-page-creator-2.1.23.tgz#0a7257c5ee13b14bb5175b825a7b41d12b78aaa2"

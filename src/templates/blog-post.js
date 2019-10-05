@@ -1,6 +1,5 @@
 import React from 'react'
 import { graphql } from 'gatsby'
-import Layout from '../components/layout'
 import styled from 'styled-components'
 
 const Setion = styled.section`
@@ -48,13 +47,11 @@ export default ({ data }) => {
   const post = data.markdownRemark
 
   return (
-    <Layout>
-      <Setion
-        dangerouslySetInnerHTML={{
-          __html: post.html,
-        }}
-      />
-    </Layout>
+    <Setion
+      dangerouslySetInnerHTML={{
+        __html: post.html,
+      }}
+    />
   )
 }
 
