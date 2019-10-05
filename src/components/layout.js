@@ -15,6 +15,7 @@ import {
   faFacebookF,
   faTwitter,
 } from '@fortawesome/free-brands-svg-icons'
+import posed from 'react-pose'
 
 import Sidebar from './sidebar'
 import Search from './search'
@@ -53,9 +54,24 @@ const Wrapper = styled.div`
   overflow: hidden;
 `
 
-const SidebarWrapper = styled.div`
-  display: ${({ sidebarDisplay }) =>
-    sidebarDisplay ? `block` : `none`};
+const SidebarBox = posed.div({
+  hidden: { marginLeft: -300 },
+  visible: { marginLeft: 0 },
+})
+const SidebarWrapper = styled(
+  ({
+    children,
+    sidebarDisplay,
+    ...otherProps
+  }) => (
+    <SidebarBox
+      pose={sidebarDisplay ? `visible` : `hidden`}
+      {...otherProps}
+    >
+      {children}
+    </SidebarBox>
+  )
+)`
   width: 300px;
   border-right: 1px solid #e8e8e8;
   overflow-y: auto;

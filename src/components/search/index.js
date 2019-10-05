@@ -4,19 +4,35 @@ import styled from 'styled-components'
 import { Link } from 'gatsby'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import posed from 'react-pose'
 
-const SearchWarp = styled.div`
-  display: ${({ searchDisplay }) =>
-    searchDisplay ? `block` : `none`};
+const SearchBox = posed.div({
+  show: { marginTop: 0 },
+  hide: { marginTop: -52 },
+})
+
+const SearchWarp = styled(
+  ({
+    children,
+    searchDisplay,
+    ...otherProps
+  }) => (
+    <SearchBox
+      pose={searchDisplay ? `show` : `hide`}
+      {...otherProps}
+    >
+      {children}
+    </SearchBox>
+  )
+)`
+  display: block;
   padding: 6px;
   background: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.07);
   border-top: 1px solid rgba(0, 0, 0, 0.07);
-  margin-bottom: 10px;
 `
 
 const SearchInput = styled.input`
-  width: 100%;
   background: 0 0;
   border: 1px solid transparent;
   box-shadow: none;
