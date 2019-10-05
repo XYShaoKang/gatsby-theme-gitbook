@@ -125,6 +125,11 @@ exports.onCreateNode = ({
       heading.length > 0
         ? toString(heading[0])
         : ``
+    createNodeField({
+      node,
+      name: `title`,
+      value: title,
+    })
 
     // 添加搜索数据
     const doc = {
@@ -169,6 +174,7 @@ exports.createPages = async ({
           node {
             fields {
               slug
+              title
             }
           }
         }
@@ -176,25 +182,27 @@ exports.createPages = async ({
     }
   `)
 
-  allMarkdownRemark.edges.forEach(({ node }) => {
+  const createDocPage = (pagePath, node) => {
     createPage({
-      path: node.fields.slug,
+      path: pagePath,
       component: path.resolve(
         `./src/templates/blog-post.js`
       ),
       context: {
         slug: node.fields.slug,
+        shareTitle: node.fields.title,
       },
     })
-  })
-  createPage({
-    path: `/`,
-    component: path.resolve(
-      `./src/templates/blog-post.js`
-    ),
-    context: {
-      slug: `/README/`,
-    },
+  }
+
+  allMarkdownRemark.edges.forEach(({ node }) => {
+    const {
+      fields: { slug },
+    } = node
+    createDocPage(slug, node)
+    if (slug === `/README/`) {
+      createDocPage(`/`, node)
+    }
   })
 }
 
