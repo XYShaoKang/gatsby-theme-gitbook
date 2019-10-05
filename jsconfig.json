@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/tsconfig.json",
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es2017"],
+    "strict": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "public", ".cache"]
+}
