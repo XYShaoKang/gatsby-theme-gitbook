@@ -194,7 +194,6 @@ const shareSite = [
 const ShareSiteList = styled.ul`
   position: absolute;
   top: 50px;
-  color: #a6a6a6;
   min-width: 160px;
   padding: 0;
   margin: 2px 0 0;
@@ -211,6 +210,7 @@ const ShareSiteList = styled.ul`
     padding: 8px 4px;
   }
   a {
+    color: #a6a6a6;
     text-decoration: none;
   }
   a:hover {
