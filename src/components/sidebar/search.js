@@ -24,7 +24,7 @@ const SearchWarp = styled(
       {children}
     </SearchBox>
   )
-)`
+)/* CSS */ `
   display: block;
   padding: 6px;
   background: #fff;

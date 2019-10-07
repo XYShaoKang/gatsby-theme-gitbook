@@ -37,7 +37,7 @@ const SidebarWrapper = styled(
       {children}
     </SidebarBox>
   )
-)`
+)/* CSS */ `
   width: 300px;
   border-right: 1px solid #e8e8e8;
   overflow-y: auto;

@@ -33,7 +33,7 @@ const Summary = styled(({ className, data }) => (
   <ul className={className}>
     <List data={data} />
   </ul>
-))`
+))/* CSS */ `
   list-style: none;
   padding: 0;
   margin: 0;
