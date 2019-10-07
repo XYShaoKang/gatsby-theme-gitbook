@@ -2,8 +2,11 @@ import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
 import { Link } from 'gatsby'
+import posed from 'react-pose'
+import PropTypes from 'prop-types'
 
 import Summary from './summary'
+import Search from './search'
 
 const SummaryWrapper = styled.div`
   background: #fafafa;
@@ -17,8 +20,46 @@ const Divider = styled.div`
   overflow: hidden;
   background: rgba(0, 0, 0, 0.07);
 `
+const SidebarBox = posed.div({
+  hidden: { marginLeft: -300 },
+  visible: { marginLeft: 0 },
+})
+const SidebarWrapper = styled(
+  ({
+    children,
+    sidebarDisplay,
+    ...otherProps
+  }) => (
+    <SidebarBox
+      pose={sidebarDisplay ? `visible` : `hidden`}
+      {...otherProps}
+    >
+      {children}
+    </SidebarBox>
+  )
+)`
+  width: 300px;
+  border-right: 1px solid #e8e8e8;
+  overflow-y: auto;
+  flex-shrink: 0;
+  a {
+    padding: 10px 15px;
+    display: block;
+    color: #364149;
+    &.selected {
+      color: #008cff;
+    }
+    :hover {
+      color: #008cff;
+      text-decoration: none;
+    }
+  }
+`
 
-const Sidebar = () => {
+const Sidebar = ({
+  sidebarDisplay,
+  searchDisplay,
+}) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -49,16 +90,27 @@ const Sidebar = () => {
   const summaryData = JSON.parse(summaryStr)
 
   return (
-    <SummaryWrapper>
-      <Header>
-        <Link to="/">
-          {data.site.siteMetadata.title}
-        </Link>
-      </Header>
-      <Divider />
-      <Summary data={summaryData} />
-    </SummaryWrapper>
+    <SidebarWrapper
+      sidebarDisplay={sidebarDisplay}
+    >
+      <Search searchDisplay={searchDisplay} />
+
+      <SummaryWrapper>
+        <Header>
+          <Link to="/">
+            {data.site.siteMetadata.title}
+          </Link>
+        </Header>
+        <Divider />
+        <Summary data={summaryData} />
+      </SummaryWrapper>
+    </SidebarWrapper>
   )
+}
+
+Sidebar.propTypes = {
+  sidebarDisplay: PropTypes.bool,
+  searchDisplay: PropTypes.bool,
 }
 
 export default Sidebar

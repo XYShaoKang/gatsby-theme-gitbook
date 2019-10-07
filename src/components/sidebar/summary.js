@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'gatsby'
+import PropTypes from 'prop-types'
 
 const Item = ({
   item: { text, slug, children },
@@ -16,6 +17,14 @@ const Item = ({
     )}
   </li>
 )
+
+Item.propTypes = {
+  item: PropTypes.shape({
+    text: PropTypes.string,
+    slug: PropTypes.string,
+    children: PropTypes.array,
+  }),
+}
 
 const List = ({ data }) =>
   data.map((d, i) => <Item key={i} item={d} />)
@@ -38,5 +47,15 @@ const Summary = styled(({ className, data }) => (
     padding-left: 20px;
   }
 `
+
+Summary.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.string,
+      slug: PropTypes.string,
+      children: PropTypes.array,
+    })
+  ),
+}
 
 export default Summary
