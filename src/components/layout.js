@@ -1,10 +1,24 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled, {
+  ThemeProvider,
+} from 'styled-components'
+import theme from 'styled-theming'
 
 import Sidebar from './sidebar'
 import GlobalStyle from './global-style'
 import BodyHeader from './body-header'
+
+const bodyBackgroundColor = theme(`mode`, {
+  white: `#fff`,
+  sepia: `#f3eacb`,
+  night: `#1c1f2b`,
+})
+const bodyAColor = theme(`mode`, {
+  white: `#000`,
+  sepia: `#704214`,
+  night: `#bdcadb`,
+})
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,6 +31,8 @@ const Wrapper = styled.div`
 const Body = styled.div`
   width: 100%;
   overflow-y: auto;
+  background: ${bodyBackgroundColor};
+  color: ${bodyAColor};
 `
 
 const Content = styled.div`
@@ -50,27 +66,36 @@ const Layout = ({ children, pageContext }) => {
     }
   }
 
+  const [theme, setTheme] = useState({
+    mode: `white`,
+    bodyFontSize: 16,
+    fontFamily: `sans`,
+  })
+
   return (
     <>
-      <GlobalStyle />
-      <Wrapper>
-        <Sidebar
-          sidebarDisplay={sidebarDisplay}
-          searchDisplay={searchDisplay}
-        />
-        <Body>
-          <BodyHeader
-            toggleSidebarHandler={
-              toggleSidebarHandler
-            }
-            toggleSearchHandler={
-              toggleSearchHandler
-            }
-            pageContext={pageContext}
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Wrapper>
+          <Sidebar
+            sidebarDisplay={sidebarDisplay}
+            searchDisplay={searchDisplay}
           />
-          <Content>{children}</Content>
-        </Body>
-      </Wrapper>
+          <Body>
+            <BodyHeader
+              toggleSidebarHandler={
+                toggleSidebarHandler
+              }
+              toggleSearchHandler={
+                toggleSearchHandler
+              }
+              setTheme={setTheme}
+              pageContext={pageContext}
+            />
+            <Content>{children}</Content>
+          </Body>
+        </Wrapper>
+      </ThemeProvider>
     </>
   )
 }

@@ -27,7 +27,6 @@ const SearchWarp = styled(
 )/* CSS */ `
   display: block;
   padding: 6px;
-  background: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.07);
   border-top: 1px solid rgba(0, 0, 0, 0.07);
 `

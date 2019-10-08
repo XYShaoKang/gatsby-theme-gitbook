@@ -10384,6 +10384,11 @@ styled-components@^4.4.0:
     stylis-rule-sheet "^0.0.10"
     supports-color "^5.5.0"
 
+styled-theming@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/styled-theming/download/styled-theming-2.2.0.tgz#3084e43d40eaab4bc11ebafd3de04e3622fee37e"
+  integrity sha1-MITkPUDqq0vBHrr9PeBONiL+434=
+
 stylefire@^4.1.3:
   version "4.1.4"
   resolved "https://registry.npm.taobao.org/stylefire/download/stylefire-4.1.4.tgz#42de066da75762bf086de33856a45ac95f7d66ce"

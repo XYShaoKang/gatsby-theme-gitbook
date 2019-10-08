@@ -4,12 +4,13 @@ import styled from 'styled-components'
 import { Link } from 'gatsby'
 import posed from 'react-pose'
 import PropTypes from 'prop-types'
+import theme from 'styled-theming'
 
 import Summary from './summary'
 import Search from './search'
 
 const SummaryWrapper = styled.div`
-  background: #fafafa;
+  /* background: ${sidebarBackgroundColor}; */
 `
 const Header = styled.div`
   /* padding: 10px 15px; */
@@ -20,10 +21,36 @@ const Divider = styled.div`
   overflow: hidden;
   background: rgba(0, 0, 0, 0.07);
 `
+
 const SidebarBox = posed.div({
   hidden: { marginLeft: -300 },
   visible: { marginLeft: 0 },
 })
+
+const sidebarBackgroundColor = theme(`mode`, {
+  white: `#fafafa`,
+  sepia: `#111111`,
+  night: `#2d3143`,
+})
+const sidebarAColor = theme(`mode`, {
+  white: `#364149`,
+  sepia: `#877f6a`,
+  night: `#c1c6d7`,
+})
+const sidebarAChangeColor = theme(`mode`, {
+  white: `#008cff`,
+  sepia: `#704214`,
+  night: `#f4f4f5`,
+})
+const sidebarAChangeBackgroundColor = theme(
+  `mode`,
+  {
+    white: `#fafafa`,
+    sepia: `#111111`,
+    night: `#252737`,
+  }
+)
+
 const SidebarWrapper = styled(
   ({
     children,
@@ -38,6 +65,7 @@ const SidebarWrapper = styled(
     </SidebarBox>
   )
 )/* CSS */ `
+  background: ${sidebarBackgroundColor};
   width: 300px;
   border-right: 1px solid #e8e8e8;
   overflow-y: auto;
@@ -45,12 +73,13 @@ const SidebarWrapper = styled(
   a {
     padding: 10px 15px;
     display: block;
-    color: #364149;
+    color: ${sidebarAColor};
     &.selected {
-      color: #008cff;
+      color: ${sidebarAChangeColor};
+      background: ${sidebarAChangeBackgroundColor};
     }
     :hover {
-      color: #008cff;
+      color: ${sidebarAChangeColor};
       text-decoration: none;
     }
   }

@@ -50,6 +50,7 @@
     "prop-types": "^15.7.2",
     "react-pose": "^4.0.8",
     "remark": "^11.0.1",
-    "styled-components": "^4.4.0"
+    "styled-components": "^4.4.0",
+    "styled-theming": "^2.2.0"
   }
 }

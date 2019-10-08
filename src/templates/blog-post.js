@@ -4,10 +4,9 @@ import styled from 'styled-components'
 
 const Setion = styled.section`
   -webkit-tap-highlight-color: transparent;
-  background: #fff;
-  font-size: 1.6rem;
+  font-size: ${props =>
+    props.theme.bodyFontSize / 10 + `rem`};
   word-wrap: break-word;
-  color: #333;
   line-height: 1.7;
   & > :first-child {
     margin-top: 0 !important;
