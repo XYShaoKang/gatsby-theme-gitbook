@@ -1,4 +1,9 @@
 import React, { useState } from 'react'
+import {
+  useStaticQuery,
+  graphql,
+  Link,
+} from 'gatsby'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -22,6 +27,11 @@ const bodyHeaderAHoverColor = theme(`mode`, {
   sepia: `#73553c`,
   night: `#fffff5`,
 })
+const h1Color = theme(`mode`, {
+  white: `#7e888b`,
+  sepia: `#704214`,
+  night: `#bdcadb`,
+})
 
 const BodyHeaderWarpper = styled.div`
   overflow: visible;
@@ -33,6 +43,26 @@ const BodyHeaderWarpper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  h1 {
+    display: none;
+    padding: 0 150px;
+    overflow: hidden;
+    a {
+      display: block;
+      font-size: 20px;
+      font-weight: 200;
+      color: ${h1Color};
+      text-decoration: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  :hover {
+    h1 {
+      display: block;
+    }
+  }
 `
 const BodyHeaderStart = styled.div`
   display: flex;
@@ -61,6 +91,18 @@ const BodyHeader = ({
   const toggleThemeSettingDisplayHandler = () => {
     toggleThemeSettingDisplay(state => !state)
   }
+  const { site } = useStaticQuery(
+    graphql`
+      query {
+        site {
+          siteMetadata {
+            title
+          }
+        }
+      }
+    `
+  )
+
   return (
     <BodyHeaderWarpper>
       <BodyHeaderStart>
@@ -89,6 +131,11 @@ const BodyHeader = ({
           )}
         </div>
       </BodyHeaderStart>
+      <h1>
+        <Link to={`/`}>
+          {site.siteMetadata.title}
+        </Link>
+      </h1>
       <BodyHeaderEnd>
         <Share
           shareTitle={pageContext.shareTitle}
