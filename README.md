@@ -20,12 +20,16 @@
 - [x] 调整样式跟 Gitbook 统一
 - [x] 主题切换
   - [x] 添加字体设置功能,字体大小,系列
-  - [ ] 主题切换时,代码块的主题也跟着切换
-- [ ] 点击文章跳转时,滚动条不会重置到最上方
+  - [x] 主题切换时,代码块的主题也跟着切换
+- [x] 点击文章跳转时,滚动条不会重置到最上方
 - [ ] 添加上下章节的切换
 - [ ] 添加章节序号
-- [ ] 侧边栏宽度调整
+- [ ] 侧边栏宽度可调整
 - [ ] 当鼠标停留在文章上方的 Header 区域时,会显示文档名
 - [ ] 弹出菜单时,点击其余地方隐藏菜单
 
 演示用的文档来源 [chrisniael/gitbook-documentation](https://github.com/chrisniael/gitbook-documentation)
+
+- prism 主题来源
+  - https://github.com/PrismJS/prism/tree/master/themes
+  - https://github.com/PrismJS/prism-themes
