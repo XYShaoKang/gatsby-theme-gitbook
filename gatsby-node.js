@@ -164,7 +164,7 @@ exports.createPages = async ({
   graphql,
   actions,
 }) => {
-  const { createPage } = actions
+  const { createPage, createRedirect } = actions
   const {
     data: { allMarkdownRemark },
   } = await graphql(`
@@ -200,9 +200,13 @@ exports.createPages = async ({
       fields: { slug },
     } = node
     createDocPage(slug, node)
-    if (slug === `/README/`) {
-      createDocPage(`/`, node)
-    }
+  })
+
+  createRedirect({
+    fromPath: `/`,
+    toPath: `/README/`,
+    isPermanent: true,
+    redirectInBrowser: true,
   })
 }
 
