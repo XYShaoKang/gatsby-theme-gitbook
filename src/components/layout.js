@@ -7,6 +7,7 @@ import theme from 'styled-theming'
 
 import Sidebar from './sidebar'
 import GlobalStyle from './global-style'
+import CodeThemes from './code-theme'
 import BodyHeader from './body-header'
 
 const bodyBackgroundColor = theme(`mode`, {
@@ -72,10 +73,14 @@ const Layout = ({ children, pageContext }) => {
     fontFamily: `sans`,
   })
 
+  const CodeTheme =
+    CodeThemes[theme.mode] || CodeThemes[`white`]
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
+        <CodeTheme />
         <Wrapper>
           <Sidebar
             sidebarDisplay={sidebarDisplay}
