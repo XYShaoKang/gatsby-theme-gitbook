@@ -3,23 +3,11 @@ import PropTypes from 'prop-types'
 import styled, {
   ThemeProvider,
 } from 'styled-components'
-import theme from 'styled-theming'
 
 import Sidebar from './sidebar'
 import GlobalStyle from './global-style'
 import CodeThemes from './code-theme'
-import BodyHeader from './body-header'
-
-const bodyBackgroundColor = theme(`mode`, {
-  white: `#fff`,
-  sepia: `#f3eacb`,
-  night: `#1c1f2b`,
-})
-const bodyAColor = theme(`mode`, {
-  white: `#000`,
-  sepia: `#704214`,
-  night: `#bdcadb`,
-})
+import Body from './body'
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,19 +15,6 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
-`
-
-const Body = styled.div`
-  width: 100%;
-  overflow-y: auto;
-  background: ${bodyBackgroundColor};
-  color: ${bodyAColor};
-`
-
-const Content = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px 15px 40px;
 `
 
 const Layout = ({ children, pageContext }) => {
@@ -86,18 +61,17 @@ const Layout = ({ children, pageContext }) => {
             sidebarDisplay={sidebarDisplay}
             searchDisplay={searchDisplay}
           />
-          <Body>
-            <BodyHeader
-              toggleSidebarHandler={
-                toggleSidebarHandler
-              }
-              toggleSearchHandler={
-                toggleSearchHandler
-              }
-              setTheme={setTheme}
-              pageContext={pageContext}
-            />
-            <Content>{children}</Content>
+          <Body
+            pageContext={pageContext}
+            toggleSidebarHandler={
+              toggleSidebarHandler
+            }
+            toggleSearchHandler={
+              toggleSearchHandler
+            }
+            setTheme={setTheme}
+          >
+            {children}
           </Body>
         </Wrapper>
       </ThemeProvider>
