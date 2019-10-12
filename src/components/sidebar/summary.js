@@ -5,18 +5,26 @@ import PropTypes from 'prop-types'
 
 const Item = ({
   item: { text, slug, children },
-}) => (
-  <li>
-    <Link to={slug} activeClassName="selected">
-      {text}
-    </Link>
-    {children && children.length > 0 && (
-      <ul>
-        <List data={children} />
-      </ul>
-    )}
-  </li>
-)
+  level,
+}) => {
+  const levelStr = level.join(`.`)
+  return (
+    <li>
+      <Link to={slug} activeClassName="selected">
+        <b>{levelStr === `0` ? `` : levelStr}</b>
+        {` ${text}`}
+      </Link>
+      {children && children.length > 0 && (
+        <ul>
+          <List
+            data={children}
+            level={[...level]}
+          />
+        </ul>
+      )}
+    </li>
+  )
+}
 
 Item.propTypes = {
   item: PropTypes.shape({
@@ -26,8 +34,14 @@ Item.propTypes = {
   }),
 }
 
-const List = ({ data }) =>
-  data.map((d, i) => <Item key={i} item={d} />)
+const List = ({ data, level }) =>
+  data.map((d, i) => (
+    <Item
+      key={i}
+      item={d}
+      level={level ? [...level, i + 1] : [i]}
+    />
+  ))
 
 const Summary = styled(({ className, data }) => (
   <ul className={className}>
