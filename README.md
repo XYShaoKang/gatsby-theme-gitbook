@@ -40,6 +40,7 @@
 - [ ] 代码块
   - [ ] 复制功能
   - [ ] 实时预览
+- [ ] 迁移到 typescript
 
 演示用的文档来源 [chrisniael/gitbook-documentation](https://github.com/chrisniael/gitbook-documentation)
 
