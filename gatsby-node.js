@@ -185,7 +185,7 @@ exports.createPages = async ({
   const createDocPage = (pagePath, node) => {
     createPage({
       path: pagePath,
-      component: path.resolve(
+      component: require.resolve(
         `./src/templates/blog-post.js`
       ),
       context: {
