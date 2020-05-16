@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, FC } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faShareAlt } from '@fortawesome/free-solid-svg-icons'
+import {
+  faShareAlt,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons'
 import {
   faFacebookF,
   faTwitter,
@@ -11,7 +13,19 @@ import {
   faVk,
 } from '@fortawesome/free-brands-svg-icons'
 
-const shareSite = [
+interface SiteType {
+  key: string
+  name: string
+  Icon: IconDefinition
+  display: boolean
+  handle: SiteHandle
+}
+
+interface SiteHandle {
+  (arg: { title: string; href: string }): void
+}
+
+const shareSite: Array<SiteType> = [
   {
     key: `weibo`,
     name: `Weibo`,
@@ -31,7 +45,7 @@ const shareSite = [
     name: `Facebook`,
     Icon: faFacebookF,
     display: false,
-    handle: ({ title, href }) => {
+    handle: ({ href }) => {
       window.open(
         `http://www.facebook.com/sharer/sharer.php?s=100&p[url]=` +
           encodeURIComponent(href)
@@ -43,7 +57,7 @@ const shareSite = [
     name: `Twitter`,
     Icon: faTwitter,
     display: false,
-    handle: ({ title, href }) => {
+    handle: ({ href }) => {
       window.open(
         `http://twitter.com/home?status=` +
           encodeURIComponent(
@@ -57,7 +71,7 @@ const shareSite = [
     name: `Google +`,
     Icon: faGooglePlus,
     display: false,
-    handle: ({ title, href }) => {
+    handle: ({ href }) => {
       window.open(
         `https://plus.google.com/share?url=` +
           encodeURIComponent(href)
@@ -69,7 +83,7 @@ const shareSite = [
     name: `Vk`,
     Icon: faVk,
     display: false,
-    handle: ({ title, href }) => {
+    handle: ({ href }) => {
       window.open(
         `http://vkontakte.ru/share.php?url=` +
           encodeURIComponent(href)
@@ -105,13 +119,21 @@ const ShareSiteList = styled.ul`
   }
 `
 
-const Share = ({ shareTitle = `` }) => {
+interface Props {
+  shareTitle: string
+}
+
+const Share: FC<Props> = ({
+  shareTitle = ``,
+}) => {
   const [
     showMoreShareSite,
     toggleShowMoreShareSite,
   ] = useState(false)
 
-  const shareHandler = handle => e => {
+  const shareHandler = (handle: SiteHandle) => (
+    e: React.MouseEvent<HTMLElement, MouseEvent>
+  ): void => {
     e.preventDefault()
     const shareData = {
       title: shareTitle,
@@ -157,10 +179,6 @@ const Share = ({ shareTitle = `` }) => {
       )}
     </>
   )
-}
-
-Share.propTypes = {
-  shareTitle: PropTypes.string,
 }
 
 export default Share

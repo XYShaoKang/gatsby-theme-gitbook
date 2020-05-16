@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { FC } from 'react'
 import {
   useStaticQuery,
   graphql,
   Link,
 } from 'gatsby'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import theme from 'styled-theming'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -14,7 +13,20 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import BodyHeader from './body-header'
-import { flatMapChildren } from '../../utils'
+import { flatMapChildren } from '../../utils/flat-map-children'
+import { SummaryStrQuery } from './__generated__/SummaryStrQuery'
+import { ThemeMode } from '../../enum'
+import { PageContext } from '../layout'
+
+export interface ThemeType {
+  mode: ThemeMode
+  bodyFontSize: number
+  fontFamily: string
+}
+
+export type SetTheme = React.Dispatch<
+  React.SetStateAction<ThemeType>
+>
 
 const bodyBackgroundColor = theme(`mode`, {
   white: `#fff`,
@@ -75,14 +87,36 @@ const Navigation = styled.div`
   }
 `
 
-const Body = ({
+interface BodyProps {
+  pageContext: PageContext
+  toggleSidebarHandler: (
+    event: React.MouseEvent<
+      HTMLAnchorElement,
+      MouseEvent
+    >
+  ) => void
+  toggleSearchHandler: (
+    event: React.MouseEvent<
+      HTMLAnchorElement,
+      MouseEvent
+    >
+  ) => void
+  setTheme: SetTheme
+}
+
+interface SummaryType {
+  slug: string
+  children?: SummaryType[]
+}
+
+const Body: FC<BodyProps> = ({
   children,
   pageContext,
   toggleSidebarHandler,
   toggleSearchHandler,
   setTheme,
 }) => {
-  const data = useStaticQuery(graphql`
+  const data: SummaryStrQuery = useStaticQuery(graphql`
     query SummaryStrQuery {
       allMarkdownRemark(
         filter: {
@@ -101,10 +135,14 @@ const Body = ({
     }
   `)
 
-  const {
-    summaryStr,
-  } = data.allMarkdownRemark.edges[0].node.fields
-  const summaryData = JSON.parse(summaryStr)
+  // TODO: 考虑如果获取到的目录为空时添加警告
+  const summaryStr =
+    data.allMarkdownRemark.edges[0].node.fields
+      ?.summaryStr ?? `{}`
+  const summaryData: SummaryType[] = JSON.parse(
+    summaryStr
+  )
+
   const summaryArray = flatMapChildren(
     summaryData
   )
@@ -155,10 +193,6 @@ const Body = ({
       </Content>
     </BodyWrapper>
   )
-}
-
-Body.propTypes = {
-  children: PropTypes.node.isRequired,
 }
 
 export default Body

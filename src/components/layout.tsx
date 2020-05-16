@@ -1,13 +1,18 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React, {
+  useState,
+  FC,
+  MouseEventHandler,
+} from 'react'
 import styled, {
   ThemeProvider,
 } from 'styled-components'
+import { hot } from 'react-hot-loader/root'
 
 import Sidebar from './sidebar'
 import GlobalStyle from './global-style'
 import CodeThemes from './code-theme'
 import Body from './body'
+import { ThemeMode } from '../enum'
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,13 +21,24 @@ const Wrapper = styled.div`
   height: 100vh;
   overflow: hidden;
 `
+export interface PageContext {
+  slug: string
+  shareTitle: string
+}
 
-const Layout = ({ children, pageContext }) => {
+interface LayoutProps {
+  pageContext: PageContext
+}
+
+const Layout: FC<LayoutProps> = ({
+  children,
+  pageContext,
+}) => {
   const [
     sidebarDisplay,
     toggleSidebar,
   ] = useState(true)
-  const toggleSidebarHandler = e => {
+  const toggleSidebarHandler: MouseEventHandler<HTMLAnchorElement> = e => {
     e.preventDefault()
     toggleSidebar(state => !state)
   }
@@ -30,7 +46,7 @@ const Layout = ({ children, pageContext }) => {
   const [searchDisplay, toggleSearch] = useState(
     false
   )
-  const toggleSearchHandler = e => {
+  const toggleSearchHandler: MouseEventHandler<HTMLAnchorElement> = e => {
     e.preventDefault()
     if (sidebarDisplay) {
       // 当侧边栏时显示时,正常执行隐藏显示切换逻辑
@@ -43,13 +59,14 @@ const Layout = ({ children, pageContext }) => {
   }
 
   const [theme, setTheme] = useState({
-    mode: `white`,
+    mode: ThemeMode.white,
     bodyFontSize: 16,
     fontFamily: `sans`,
   })
 
   const CodeTheme =
-    CodeThemes[theme.mode] || CodeThemes[`white`]
+    CodeThemes[theme.mode] ||
+    CodeThemes[ThemeMode.white]
 
   return (
     <>
@@ -79,8 +96,4 @@ const Layout = ({ children, pageContext }) => {
   )
 }
 
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-}
-
-export default Layout
+export default hot(Layout)

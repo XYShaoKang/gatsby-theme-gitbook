@@ -67,3 +67,8 @@ yarn-error.log
 .pnp.js
 # Yarn Integrity file
 .yarn-integrity
+
+# Generated types by gatsby-plugin-codegen
+__generated__
+apollo.config.js
+schema.json

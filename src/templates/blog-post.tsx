@@ -1,6 +1,7 @@
-import React from 'react'
+import * as React from 'react'
 import { graphql } from 'gatsby'
 import styled from 'styled-components'
+import { BlogPageQuery } from './__generated__/BlogPageQuery'
 
 const Setion = styled.section`
   -webkit-tap-highlight-color: transparent;
@@ -42,20 +43,29 @@ const Setion = styled.section`
   }
 `
 
-export default ({ data }) => {
+type PageProps<TData> = {
+  data: TData
+}
+
+type BlogProps = PageProps<BlogPageQuery>
+
+const BlogPage: React.FC<BlogProps> = ({
+  data,
+}) => {
   const post = data.markdownRemark
 
   return (
     <Setion
       dangerouslySetInnerHTML={{
-        __html: post.html,
+        __html: post?.html ?? ``,
       }}
     />
   )
 }
+export default BlogPage
 
-export const query = graphql`
-  query($slug: String!) {
+export const pageQuery = graphql`
+  query BlogPageQuery($slug: String!) {
     markdownRemark(
       fields: { slug: { eq: $slug } }
     ) {

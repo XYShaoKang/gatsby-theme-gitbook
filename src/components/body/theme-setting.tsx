@@ -1,7 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { FC } from 'react'
 import styled from 'styled-components'
 import theme from 'styled-theming'
+
+import { ThemeMode } from '../../enum'
+import { SetTheme, ThemeType } from '.'
 
 const themeSettingButtonColor = theme(`mode`, {
   white: `#a6a6a6`,
@@ -75,7 +77,7 @@ const themes = [
     name: `bodyFontSize`,
     value: [`a`, `A`],
     default: 16,
-    fn: (v, state) => {
+    fn: (v: string, state: ThemeType) => {
       const value = state[`bodyFontSize`]
       if (v === `a` && value > 12) {
         return value - 1
@@ -90,52 +92,54 @@ const themes = [
     name: `fontFamily`,
     value: [`serif`, `sans`],
     default: `sans`,
-    fn: v => v,
+    fn: (v: string) => v,
   },
   {
     name: `mode`,
-    value: [`white`, `sepia`, `night`],
-    default: `white`,
-    fn: v => v,
+    value: [
+      ThemeMode.white,
+      ThemeMode.sepia,
+      ThemeMode.night,
+    ],
+    default: ThemeMode.white,
+    fn: (v: ThemeMode) => v,
   },
 ]
 
 // TODO: 优化逻辑
-const ThemeSetting = ({ setTheme }) => {
+const ThemeSetting: FC<{
+  setTheme: SetTheme
+}> = ({ setTheme }) => {
   console.log()
   return (
     <ThemeSettingWarpper>
       <ul>
         {themes.map(({ name, value, fn }) => (
           <li key={name}>
-            {value.map((v, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  setTheme(state => {
-                    return {
-                      ...state,
-                      [name]: fn(v, state),
-                    }
-                  })
-                }}
-              >
-                {v}
-              </button>
-            ))}
+            {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+              // @ts-ignore
+              value.map((v, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setTheme(state => {
+                      return {
+                        ...state,
+                        [name]: fn(v, state),
+                      }
+                    })
+                  }}
+                >
+                  {v}
+                </button>
+              ))
+            }
           </li>
         ))}
       </ul>
     </ThemeSettingWarpper>
   )
-}
-
-ThemeSetting.propTypes = {
-  toggleSidebarHandler: PropTypes.func,
-  toggleSearchHandler: PropTypes.func,
-  pageContext: PropTypes.shape({
-    shareTitle: PropTypes.string,
-  }),
 }
 
 export default ThemeSetting
