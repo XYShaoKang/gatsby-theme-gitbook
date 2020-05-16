@@ -1,15 +1,26 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import { Link } from 'gatsby'
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import React, { useState, FC } from 'react'
+import styled, { css } from 'styled-components'
+import {
+  Link,
+  useStaticQuery,
+  graphql,
+} from 'gatsby'
 import posed from 'react-pose'
+
+import { useJsSearch } from '../../hooks/use-search'
+import { SerachDataQuery } from './__generated__/SerachDataQuery'
 
 const SearchBox = posed.div({
   show: { marginTop: 0 },
   hide: { marginTop: -52 },
 })
+
+const SearchWarpCss = css`
+  display: block;
+  padding: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+`
 
 const SearchWarp = styled(
   ({
@@ -24,14 +35,12 @@ const SearchWarp = styled(
       {children}
     </SearchBox>
   )
-)/* CSS */ `
-  display: block;
-  padding: 6px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-  border-top: 1px solid rgba(0, 0, 0, 0.07);
+)`
+  ${SearchWarpCss}
 `
 
 const SearchInput = styled.input`
+  width: 100%;
   background: 0 0;
   border: 1px solid transparent;
   box-shadow: none;
@@ -55,24 +64,31 @@ const TempList = styled.ul`
   }
 `
 
-const Search = ({ searchDisplay }) => {
+interface SearchProps {
+  searchDisplay: boolean
+}
+
+const Search: FC<SearchProps> = ({
+  searchDisplay,
+}: SearchProps) => {
   const [value, setValue] = useState(``)
 
-  const APOLLO_QUERY = gql`
-    query MyQuery($key: String!) {
-      Search(key: $key) {
-        slug
-        title
-        content
+  const {
+    SerachDocs: serachDocs,
+  }: SerachDataQuery = useStaticQuery(
+    graphql`
+      query SerachDataQuery {
+        SerachDocs {
+          slug
+          title
+          content
+        }
       }
-    }
-  `
-  const { loading, error, data } = useQuery(
-    APOLLO_QUERY,
-    {
-      variables: { key: value },
-    }
+    `
   )
+  const [index] = useJsSearch(serachDocs ?? [])
+
+  const searchResult = index?.search(value) ?? []
 
   return (
     <SearchWarp searchDisplay={searchDisplay}>
@@ -83,12 +99,12 @@ const Search = ({ searchDisplay }) => {
           setValue(e.target.value)
         }}
       />
-      {!loading &&
-        !error &&
-        data.Search.length > 0 && (
+      {value &&
+        serachDocs &&
+        searchResult.length > 0 && (
           <TempList>
-            {data.Search.map(
-              ({ slug, title, content }) => (
+            {searchResult.map(
+              ({ slug, title }) => (
                 <li key={slug}>
                   <Link to={slug}>{title}</Link>
                 </li>
@@ -98,10 +114,6 @@ const Search = ({ searchDisplay }) => {
         )}
     </SearchWarp>
   )
-}
-
-Search.propTypes = {
-  searchDisplay: PropTypes.bool,
 }
 
 export default Search

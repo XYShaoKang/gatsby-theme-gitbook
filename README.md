@@ -2,15 +2,22 @@
 
 模仿 Gitbook 的样式,将 Gitbook 文档无缝迁移到 Gatsby
 
-- 样式 `styled-components`
-  - 代码块渲染 `prism`
-- 图标 `fortawesome`
-- 解析 Markdown `gatsby-transformer-remark`
-  - 将 mdast 节点转化为字符串 `mdast-util-to-string`
+- 图标 [`fortawesome`](https://fortawesome.com/)
+- 解析 Markdown [`gatsby-transformer-remark`](https://www.gatsbyjs.org/packages/gatsby-transformer-remark/)
+  - 将 mdast 节点转化为字符串 [`mdast-util-to-string`](https://github.com/syntax-tree/mdast-util-to-string)
 - 搜索
-  - 搜索引擎 `js-search`
-  - 中文分词支持 `nodejieba`
-  - 客户端查询 `apollo`
+  - 搜索引擎
+    - [`js-search`](https://github.com/bvaughn/js-search)
+  - 中文分词模块
+    - [segmentit](https://github.com/linonetwo/segmentit)
+  - 字典
+    - [segment-dict](https://github.com/bluelovers/node-segment-dict)
+- 样式 [`styled-components`](https://www.styled-components.com/)
+  - 代码块渲染 [`prism`](https://prismjs.com/)
+  - prism 主题来源
+    - https://github.com/PrismJS/prism/tree/master/themes
+    - https://github.com/PrismJS/prism-themes
+- 演示用的文档来源 [chrisniael/gitbook-documentation](https://github.com/chrisniael/gitbook-documentation)
 
 ## TODO
 
@@ -40,10 +47,69 @@
 - [ ] 代码块
   - [ ] 复制功能
   - [ ] 实时预览
-- [ ] 迁移到 typescript
+- [-] 迁移到 typescript
+  - [x] 修改 js 文件为 ts
+  - [x] 补全 ts 文件声明定义
+  - [x] 开发环境
+    - [x] eslint 配置
+    - [x] vscode 智能提示
+      - [x] graphql 类型
+        - 使用`gatsby-plugin-codegen`加上 vscode 的插件`apollographql.vscode-apollo`
+        - [ ] 如果定义了新的查询,需要重新启动,才会生成对应的类型,寻找可以不用重启,能实时生成类型的方案
+    - [x] apollo 中使用 gql 不能生成定义
+      - 将 gql 命名为 graphql
+    - [x] [支持可选操作符](https://github.com/TC39/proposal-optional-chaining) ts > 3.7 原生支持
+    - [x] [空置合并操作符](https://github.com/tc39/proposal-nullish-coalescing) ts > 3.7 原生支持
+    - [-] 优化智能提示速读
+      - `"typescript.tsserver.log": "verbose"` 开启日志输出
+      - `settings.json`
+        - `"editor.semanticHighlighting.enabled": false`
+        - `"editor.tokenColorCustomizations"."semanticHighlighting": false`
+      - `tsconfig.json`
+  - [x] 运行
+    - [x] 修复主题选择界面
+    - [x] 热加载会重新刷新页面
+      - [Hot Reloading broken by wrapPageElement](https://github.com/gatsbyjs/gatsby/issues/21729)
+  - [x] 编译
+    - [x] 报错 `Invariant Violation`
+      - ~~[react-apollo#3950](https://github.com/apollographql/react-apollo/issues/3950)~~
+      - ~~需要新建`gatsby-ssr.js`,将`gatsby-browser.js`的内容复制进去就可以了~~
+      - 错误主要是因为使用`apollo`需要在外层包裹`ApolloProvider`造成的,而编译后没有`___graphql`,所以暂时不需要使用`apollo`.
+  - [ ] 其他
+    - [ ] 之前使用`/* CSS */`配合`Babel JavaScript`插件可以使模板字符串里面的 css 高亮,现在不行了,查查原因
+    - [x] 考虑是否将配置文件也迁移到 ts,还是 es6
+      - 迁移到 es6,然后使用`esm`启动
+    - [ ] 对配置文件进行拆分模块化
+- [x] 修复搜索
+  - [x] 偶尔会搜索不到内容
+    - 应该是缓存引起的,`search.addDocuments`在`onCreateNode`中解析`Markdown`时去添加内容,当存在缓存时,好像并不会在去重新解析`Markdown`,所以就不会走到往`search`里添加索引这一步,这样没有索引,搜索结果就为空了.
+    - 解决办法
+      - 因为需要考虑编译后的使用搜索,将`js-search`迁移到浏览器上使用,需要的文档数据使用`Graphql`获取,不需要在`onCreateNode`中去添加文档
+  - [ ] 输入时,展示界面闪屏
+  - [x] 支持离线搜索
+  - [x] 中文支持
+    - 使用`segmentit`+`segment-dict`
+  - [x] 热加载时,搜索索引也跟着更新
+    - 在`getAllNodes`中添加`connectionType: 'MarkdownRemark'`
+  - [ ] 高亮搜索的关键词
+  - [ ] 滚动到关键词处
+  - [ ] 搜索结果排序
+  - [ ] 修复 js-search@2.0 类型
+  - [ ] 完善 segmentit 类型
+  - [ ] 添加搜索时的提示,在搜索过程中的进度条,搜索结束如果搜索没有结果,需要提示
+  - [ ] 控制搜索的请求(当前是每输入一个字符都会发起请求)
+    - [ ] 判断用户是否在输入,如果一直在输入,直到等待输入完成,在发送请求
+    - [ ] 控制在比较小的时间间隔内,这样可以有一种实时的效果,又不会太频繁的发送请求
+    - [ ] 可以考虑根据网络情况使用策略
+  - [ ] 添加搜索结果直达快捷键,并显示
+  - [ ] 明确搜索规则,并提供相应的可展示 UI
+  - [ ] 添加搜索展示的滚动条
+- [ ] 添加测试
+- [ ] 主题可配置项
+  - [ ] 目录页,默认为`/SUMMARY/`
+- [ ] 解决控制台 404 报错
 
-演示用的文档来源 [chrisniael/gitbook-documentation](https://github.com/chrisniael/gitbook-documentation)
+## FAQ
 
-- prism 主题来源
-  - https://github.com/PrismJS/prism/tree/master/themes
-  - https://github.com/PrismJS/prism-themes
+- 不要在浏览器使用`Apollo`来访问服务端的`___graphql`,编译后没有`___graphql`,只能在开发模式中用,可以用作开发过程中的辅助
+  - 有机会可以尝试下能不能利用`Apollo Cache`,将一些数据规范化,导入到缓存中,在浏览器中使用

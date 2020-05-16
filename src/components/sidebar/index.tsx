@@ -1,31 +1,13 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Link } from 'gatsby'
 import posed from 'react-pose'
-import PropTypes from 'prop-types'
 import theme from 'styled-theming'
 
 import Summary from './summary'
 import Search from './search'
-
-const SummaryWrapper = styled.div`
-  /* background: ${sidebarBackgroundColor}; */
-`
-const Header = styled.div`
-  /* padding: 10px 15px; */
-`
-const Divider = styled.div`
-  height: 1px;
-  margin: 7px 0;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.07);
-`
-
-const SidebarBox = posed.div({
-  hidden: { marginLeft: -300 },
-  visible: { marginLeft: 0 },
-})
+import { SidebarQuery } from './__generated__/SidebarQuery'
 
 const sidebarBackgroundColor = theme(`mode`, {
   white: `#fafafa`,
@@ -51,20 +33,25 @@ const sidebarAChangeBackgroundColor = theme(
   }
 )
 
-const SidebarWrapper = styled(
-  ({
-    children,
-    sidebarDisplay,
-    ...otherProps
-  }) => (
-    <SidebarBox
-      pose={sidebarDisplay ? `visible` : `hidden`}
-      {...otherProps}
-    >
-      {children}
-    </SidebarBox>
-  )
-)/* CSS */ `
+const SummaryWrapper = styled.div`
+  /* background: ${sidebarBackgroundColor}; */
+`
+const Header = styled.div`
+  /* padding: 10px 15px; */
+`
+const Divider = styled.div`
+  height: 1px;
+  margin: 7px 0;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.07);
+`
+
+const SidebarBox = posed.div({
+  hidden: { marginLeft: -300 },
+  visible: { marginLeft: 0 },
+})
+
+const SidebarWrapperCss = css`
   background: ${sidebarBackgroundColor};
   width: 300px;
   border-right: 1px solid #e8e8e8;
@@ -85,12 +72,34 @@ const SidebarWrapper = styled(
   }
 `
 
-const Sidebar = ({
+const SidebarWrapper = styled(
+  ({
+    children,
+    sidebarDisplay,
+    ...otherProps
+  }) => (
+    <SidebarBox
+      pose={sidebarDisplay ? `visible` : `hidden`}
+      {...otherProps}
+    >
+      {children}
+    </SidebarBox>
+  )
+)`
+  ${SidebarWrapperCss}
+`
+
+interface SidebarProps {
+  sidebarDisplay: boolean
+  searchDisplay: boolean
+}
+
+const Sidebar: FC<SidebarProps> = ({
   sidebarDisplay,
   searchDisplay,
 }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
+  const data: SidebarQuery = useStaticQuery(graphql`
+    query SidebarQuery {
       site {
         siteMetadata {
           title
@@ -113,9 +122,9 @@ const Sidebar = ({
     }
   `)
 
-  const {
-    summaryStr,
-  } = data.allMarkdownRemark.edges[0].node.fields
+  const summaryStr =
+    data.allMarkdownRemark.edges[0].node.fields
+      ?.summaryStr ?? `{}`
   const summaryData = JSON.parse(summaryStr)
 
   return (
@@ -127,7 +136,8 @@ const Sidebar = ({
       <SummaryWrapper>
         <Header>
           <Link to="/">
-            {data.site.siteMetadata.title}
+            {data.site?.siteMetadata?.title ??
+              `Home`}
           </Link>
         </Header>
         <Divider />
@@ -135,11 +145,6 @@ const Sidebar = ({
       </SummaryWrapper>
     </SidebarWrapper>
   )
-}
-
-Sidebar.propTypes = {
-  sidebarDisplay: PropTypes.bool,
-  searchDisplay: PropTypes.bool,
 }
 
 export default Sidebar

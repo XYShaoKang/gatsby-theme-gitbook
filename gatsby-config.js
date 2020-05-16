@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   siteMetadata: {
     title: `GitBook文档（中文版）`,
     description: `GitBook文档（中文版）.`,
@@ -29,10 +29,12 @@ module.exports = {
                   language: `superscript`,
                   extend: `javascript`,
                   definition: {
+                    // eslint-disable-next-line @typescript-eslint/camelcase
                     superscript_types: /(SuperType)/,
                   },
                   insertBefore: {
                     function: {
+                      // eslint-disable-next-line @typescript-eslint/camelcase
                       superscript_keywords: /(superif|superelse)/,
                     },
                   },
@@ -53,9 +55,13 @@ module.exports = {
       resolve: `gatsby-plugin-layout`,
       options: {
         component: require.resolve(
-          `./src/components/layout.js`
+          `./src/components/layout.tsx`
         ),
       },
+    },
+    {
+      resolve: `gatsby-plugin-codegen`,
+      options: {},
     },
   ],
 }

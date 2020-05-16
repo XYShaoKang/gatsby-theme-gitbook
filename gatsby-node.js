@@ -4,29 +4,11 @@
  * See: https://www.gatsbyjs.org/docs/node-apis/
  */
 
-const path = require(`path`)
-const fs = require(`fs`)
-const {
-  createFilePath,
-} = require(`gatsby-source-filesystem`)
-const Remark = require(`remark`)
-const toString = require(`mdast-util-to-string`)
-const JsSearch = require(`js-search`)
-const nodejieba = require(`nodejieba`)
-
-// 创建搜索
-const search = new JsSearch.Search(`slug`)
-search.tokenizer = {
-  tokenize(text) {
-    return nodejieba
-      .tag(text, true)
-      .filter(({ tag }) => tag !== `x`)
-      .map(({ word }) => word)
-  },
-}
-search.addIndex(`slug`)
-search.addIndex(`title`)
-search.addIndex(`content`)
+import path from 'path'
+import fs from 'fs'
+import { createFilePath } from 'gatsby-source-filesystem'
+import Remark from 'remark'
+import toString from 'mdast-util-to-string'
 
 function getSummary(node, obj = {}) {
   if (
@@ -69,7 +51,7 @@ function getSummary(node, obj = {}) {
   return newChildren
 }
 
-exports.onPreBootstrap = (
+export const onPreBootstrap = (
   { reporter },
   options
 ) => {
@@ -97,11 +79,12 @@ exports.onPreBootstrap = (
   }
 }
 
-exports.onCreateNode = ({
+export const onCreateNode = async ({
   node,
   getNode,
   actions,
   reporter,
+  cache,
 }) => {
   const { createNodeField } = actions
   if (node.internal.type === `MarkdownRemark`) {
@@ -131,14 +114,6 @@ exports.onCreateNode = ({
       value: title,
     })
 
-    // 添加搜索数据
-    const doc = {
-      slug,
-      title: title,
-      content: node.internal.content,
-    }
-    search.addDocuments([doc])
-
     if (slug === `/SUMMARY/`) {
       const list = markdownAst.children.filter(
         node => node.type === `list`
@@ -160,11 +135,13 @@ exports.onCreateNode = ({
 }
 
 // TODO: 按照目录文件 SUMMARY.md 来创建页面
-exports.createPages = async ({
+export const createPages = async ({
   graphql,
   actions,
+  cache,
 }) => {
   const { createPage, createRedirect } = actions
+
   const {
     data: { allMarkdownRemark },
   } = await graphql(`
@@ -176,6 +153,9 @@ exports.createPages = async ({
               slug
               title
             }
+            internal {
+              content
+            }
           }
         }
       }
@@ -186,7 +166,7 @@ exports.createPages = async ({
     createPage({
       path: pagePath,
       component: require.resolve(
-        `./src/templates/blog-post.js`
+        `./src/templates/blog-post.tsx`
       ),
       context: {
         slug: node.fields.slug,
@@ -210,37 +190,44 @@ exports.createPages = async ({
   })
 }
 
-exports.createSchemaCustomization = ({
+export const createSchemaCustomization = ({
   actions,
   schema,
 }) => {
   const { createTypes } = actions
 
-  const typeDefs = `
-    type SerachResult {
+  const serializedDataType = `
+    type SerachDoc{
       slug: String!
       title: String!
       content: String!
     }
   `
-  createTypes(typeDefs)
+  createTypes(serializedDataType)
 }
 
-exports.createResolvers = ({
+export const createResolvers = ({
   createResolvers,
 }) => {
   createResolvers({
     Query: {
-      Search: {
-        type: [`SerachResult!`],
-        args: {
-          key: `String!`,
-        },
+      SerachDocs: {
+        type: [`SerachDoc!`],
         resolve(source, args, context, info) {
-          const { key } = args
-          const result = search.search(key)
+          const allMarkdownRemark = context.nodeModel.getAllNodes(
+            { type: `MarkdownRemark` },
+            { connectionType: `MarkdownRemark` }
+          )
+          const docsData = allMarkdownRemark.map(
+            ({
+              fields: { slug, title },
+              internal: { content },
+            }) => {
+              return { slug, title, content }
+            }
+          )
 
-          return result
+          return docsData
         },
       },
     },

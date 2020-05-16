@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, {
+  useState,
+  MouseEventHandler,
+  FC,
+} from 'react'
 import {
   useStaticQuery,
   graphql,
   Link,
 } from 'gatsby'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -16,6 +19,9 @@ import theme from 'styled-theming'
 
 import Share from './share'
 import ThemeSetting from './theme-setting'
+import { BodyHeaderQuery } from './__generated__/BodyHeaderQuery'
+import { SetTheme } from '.'
+import { PageContext } from '../layout'
 
 const bodyHeaderAColor = theme(`mode`, {
   white: `#ccc`,
@@ -78,7 +84,18 @@ const BodyHeaderStart = styled.div`
 `
 const BodyHeaderEnd = styled(BodyHeaderStart)``
 
-const BodyHeader = ({
+interface BodyHeaderProps {
+  toggleSidebarHandler: MouseEventHandler<
+    HTMLAnchorElement
+  >
+  toggleSearchHandler: MouseEventHandler<
+    HTMLAnchorElement
+  >
+  setTheme: SetTheme
+  pageContext: PageContext
+}
+
+const BodyHeader: FC<BodyHeaderProps> = ({
   toggleSidebarHandler,
   toggleSearchHandler,
   setTheme,
@@ -88,12 +105,14 @@ const BodyHeader = ({
     themeSettingDisplay,
     toggleThemeSettingDisplay,
   ] = useState(false)
-  const toggleThemeSettingDisplayHandler = () => {
+  const toggleThemeSettingDisplayHandler: MouseEventHandler<HTMLAnchorElement> = () => {
     toggleThemeSettingDisplay(state => !state)
   }
-  const { site } = useStaticQuery(
+  const {
+    site,
+  }: BodyHeaderQuery = useStaticQuery(
     graphql`
-      query {
+      query BodyHeaderQuery {
         site {
           siteMetadata {
             title
@@ -133,7 +152,7 @@ const BodyHeader = ({
       </BodyHeaderStart>
       <h1>
         <Link to={`/`}>
-          {site.siteMetadata.title}
+          {site?.siteMetadata?.title ?? `Home`}
         </Link>
       </h1>
       <BodyHeaderEnd>
@@ -143,14 +162,6 @@ const BodyHeader = ({
       </BodyHeaderEnd>
     </BodyHeaderWarpper>
   )
-}
-
-BodyHeader.propTypes = {
-  toggleSidebarHandler: PropTypes.func,
-  toggleSearchHandler: PropTypes.func,
-  pageContext: PropTypes.shape({
-    shareTitle: PropTypes.string,
-  }),
 }
 
 export default BodyHeader

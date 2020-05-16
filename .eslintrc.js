@@ -2,15 +2,19 @@
  * @type {import("eslint").Linter.Config}
  */
 const config = {
-  parser: `babel-eslint`,
+  parser: `@typescript-eslint/parser`,
   extends: [
-    `google`,
-    `eslint:recommended`,
     `plugin:react/recommended`,
-    `prettier`,
-    `prettier/react`,
+    `plugin:@typescript-eslint/recommended`,
+    `prettier/@typescript-eslint`,
+    `plugin:prettier/recommended`,
   ],
-  plugins: [`prettier`, `react`, `filenames`],
+  plugins: [
+    `@typescript-eslint`,
+    `prettier`,
+    `react`,
+    `filenames`,
+  ],
   parserOptions: {
     ecmaVersion: 2016,
     sourceType: `module`,
@@ -67,6 +71,7 @@ const config = {
     ],
     'require-jsdoc': `off`,
     'valid-jsdoc': `off`,
+    '@typescript-eslint/explicit-function-return-type': `off`,
   },
   overrides: [
     {
@@ -77,6 +82,17 @@ const config = {
       globals: {
         ___loader: false,
         ___emitter: false,
+      },
+    },
+    {
+      files: [`src/**/*.d.ts`],
+      rules: {
+        'prettier/prettier': [
+          `error`,
+          { singleQuote: false },
+        ],
+        quotes: [`error`, `double`],
+        '@typescript-eslint/interface-name-prefix': `off`,
       },
     },
   ],
