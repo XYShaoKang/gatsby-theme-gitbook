@@ -12,7 +12,11 @@
       "program": "${workspaceRoot}/node_modules/gatsby/dist/bin/gatsby",
       "args": ["develop"],
       "stopOnEntry": false,
-      "runtimeArgs": ["--nolazy"],
+      "runtimeArgs": [
+        "--require",
+        "esm",
+        "--nolazy"
+      ],
       "sourceMaps": false
     }
   ]
