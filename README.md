@@ -75,8 +75,10 @@
       - ~~[react-apollo#3950](https://github.com/apollographql/react-apollo/issues/3950)~~
       - ~~需要新建`gatsby-ssr.js`,将`gatsby-browser.js`的内容复制进去就可以了~~
       - 错误主要是因为使用`apollo`需要在外层包裹`ApolloProvider`造成的,而编译后没有`___graphql`,所以暂时不需要使用`apollo`.
-  - [ ] 其他
-    - [ ] 之前使用`/* CSS */`配合`Babel JavaScript`插件可以使模板字符串里面的 css 高亮,现在不行了,查查原因
+  - [x] 其他
+    - [x] 之前使用`/* CSS */`配合`Babel JavaScript`插件可以使模板字符串里面的 css 高亮,现在不行了,查查原因
+      - 失效的原因是`Babel JavaScript`并不会去识别`ts`和`tsx`文件,需要在`settings.json`中配置将`ts`映射为`javascript`
+      - `setting.json`配置`"files.associations": { "*.ts": "javascript", "*.tsx": "javascriptreact" }`
     - [x] 考虑是否将配置文件也迁移到 ts,还是 es6
       - 迁移到 es6,然后使用`esm`启动
     - [x] 对配置文件进行拆分模块化
