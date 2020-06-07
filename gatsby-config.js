@@ -61,7 +61,9 @@ export default {
     },
     {
       resolve: `gatsby-plugin-codegen`,
-      options: {},
+      options: {
+        watch: true,
+      },
     },
   ],
 }
