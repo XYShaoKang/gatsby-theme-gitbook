@@ -72,3 +72,6 @@ yarn-error.log
 __generated__
 apollo.config.js
 schema.json
+
+# Storybook build
+storybook-static

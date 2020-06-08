@@ -11,7 +11,9 @@
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "commit": "git-cz",
-    "release": "standard-version"
+    "release": "standard-version",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "peerDependencies": {
     "gatsby": "^2.21.16",
@@ -19,6 +21,11 @@
     "react-dom": "^16.13.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-links": "^5.3.19",
+    "@storybook/addons": "^5.3.19",
+    "@storybook/react": "^5.3.19",
     "@types/eslint": "^6.8.0",
     "@types/isomorphic-fetch": "^0.0.35",
     "@types/node": "^13.13.5",
@@ -30,6 +37,8 @@
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "babel-preset-react-app": "^9.1.2",
     "commitizen": "^4.1.2",
     "cz-conventional-changelog": "3.2.0",
     "eslint": "6.8.0",
