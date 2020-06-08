@@ -9,7 +9,9 @@
     "develop": "npx --node-arg '-r esm' gatsby develop",
     "serve": "npx --node-arg '-r esm' gatsby serve",
     "type-check": "tsc --noEmit",
-    "type-check:watch": "npm run type-check -- --watch"
+    "type-check:watch": "npm run type-check -- --watch",
+    "commit": "git-cz",
+    "release": "standard-version"
   },
   "peerDependencies": {
     "gatsby": "^2.21.16",
@@ -28,6 +30,8 @@
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "babel-eslint": "^10.1.0",
+    "commitizen": "^4.1.2",
+    "cz-conventional-changelog": "3.2.0",
     "eslint": "6.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^6.11.0",
@@ -42,6 +46,7 @@
     "preval.macro": "^5.0.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "standard-version": "^8.0.0",
     "typescript": "^3.8.3"
   },
   "dependencies": {
@@ -71,5 +76,10 @@
     "segmentit": "^2.0.3",
     "styled-components": "^5.1.0",
     "styled-theming": "^2.2.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
